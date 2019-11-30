@@ -5,26 +5,33 @@ from util import dateutil
 inputFile = None
 outputFile = None
 startTime = None
-endTime = None
 
 
 def begin(script_path):
     global inputFile, outputFile, startTime
 
     puzzle = os.path.basename(os.path.normpath(script_path)[:-3])
-    inputFile = open('../input/' + puzzle, 'r')
-    outputFile = open('../solution/' + puzzle, 'w')
-    startTime = dateutil.current_formatted_timestamp()
+    inputFile = open_local('input', puzzle, 'r')
+    outputFile = open_local('solution', puzzle, 'w')
+
+    startTime = dateutil.current_timestamp()
 
     return inputFile
 
 
-def end(solution):
-    global inputFile, outputFile, startTime, endTime
+def end(solution: str):
+    global inputFile, outputFile, startTime
 
-    endTime = dateutil.current_formatted_timestamp()
-    outputFile.write('Solution: ' + str(solution) + '\n')
-    outputFile.write('Runtime: ' + str(round(endTime - startTime, 3)) + ' sec\n')
+    # python's naming conventions are weird
+    end_time = dateutil.current_timestamp()
+
+    outputFile.write('{:<12}{}'.format('Solution:', solution) + '\n')
+    outputFile.write('{:<12}{}'.format('Runtime:', str(round(end_time - startTime, 4))) + ' sec\n')
 
     inputFile.close()
     outputFile.close()
+
+
+def open_local(folder: str, file: str, mode: str):
+    separator = os.path.sep
+    return open(os.getcwd() + separator + folder + separator + file, mode)

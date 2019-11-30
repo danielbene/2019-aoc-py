@@ -15,4 +15,4 @@ for line in inputFile:
 
 # --- solution ---
 
-iohandler.end(frequency)
+iohandler.end(str(frequency))
