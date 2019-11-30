@@ -1,7 +1,7 @@
 # solution from 2018 aoc day1_1 for environment testing
-from util import IOhandler
+from util import iohandler
 
-inputFile = IOhandler.begin('test')
+inputFile = iohandler.begin(__file__)
 
 # --- solution ---
 
@@ -15,4 +15,4 @@ for line in inputFile:
 
 # --- solution ---
 
-IOhandler.end(frequency)
+iohandler.end(frequency)

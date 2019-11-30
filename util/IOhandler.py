@@ -1,20 +1,20 @@
 # simple util methods to simplify the redundant parts of the solutions
-from datetime import datetime
+import os
+from util import dateutil
 
 inputFile = None
 outputFile = None
 startTime = None
 endTime = None
-# modify pattern to match your defaults
-tsPattern = '%Y-%m-%d %H:%M:%S.%f'
 
 
-def begin(puzzle):
+def begin(script_path):
     global inputFile, outputFile, startTime
 
+    puzzle = os.path.basename(os.path.normpath(script_path)[:-3])
     inputFile = open('../input/' + puzzle, 'r')
     outputFile = open('../solution/' + puzzle, 'w')
-    startTime = datetime.strptime(str(datetime.now()), tsPattern).timestamp()
+    startTime = dateutil.current_formatted_timestamp()
 
     return inputFile
 
@@ -22,7 +22,7 @@ def begin(puzzle):
 def end(solution):
     global inputFile, outputFile, startTime, endTime
 
-    endTime = datetime.strptime(str(datetime.now()), tsPattern).timestamp()
+    endTime = dateutil.current_formatted_timestamp()
     outputFile.write('Solution: ' + str(solution) + '\n')
     outputFile.write('Runtime: ' + str(round(endTime - startTime, 3)) + ' sec\n')
 
