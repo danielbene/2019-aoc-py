@@ -1,30 +1,37 @@
 # simple util methods to simplify the redundant parts of the solutions
-from datetime import datetime
+import os
+from util import dateutil
 
 inputFile = None
 outputFile = None
 startTime = None
-endTime = None
-# modify pattern to match your defaults
-tsPattern = '%Y-%m-%d %H:%M:%S.%f'
 
 
-def begin(puzzle):
+def begin(script_path):
     global inputFile, outputFile, startTime
 
-    inputFile = open('../input/' + puzzle, 'r')
-    outputFile = open('../solution/' + puzzle, 'w')
-    startTime = datetime.strptime(str(datetime.now()), tsPattern).timestamp()
+    puzzle = os.path.basename(os.path.normpath(script_path)[:-3])
+    inputFile = open_local('input', puzzle, 'r')
+    outputFile = open_local('solution', puzzle, 'w')
+
+    startTime = dateutil.current_timestamp()
 
     return inputFile
 
 
-def end(solution):
-    global inputFile, outputFile, startTime, endTime
+def end(solution: str):
+    global inputFile, outputFile, startTime
 
-    endTime = datetime.strptime(str(datetime.now()), tsPattern).timestamp()
-    outputFile.write('Solution: ' + str(solution) + '\n')
-    outputFile.write('Runtime: ' + str(round(endTime - startTime, 3)) + ' sec\n')
+    # python's naming conventions are weird
+    end_time = dateutil.current_timestamp()
+
+    outputFile.write('{:<12}{}'.format('Solution:', solution) + '\n')
+    outputFile.write('{:<12}{}'.format('Runtime:', str(round(end_time - startTime, 4))) + ' sec\n')
 
     inputFile.close()
     outputFile.close()
+
+
+def open_local(folder: str, file: str, mode: str):
+    separator = os.path.sep
+    return open(os.getcwd() + separator + folder + separator + file, mode)

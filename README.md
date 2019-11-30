@@ -5,3 +5,5 @@ I use this year's aoc to learn Python programming. I'm really curious that why i
 
 ## Notice
 I never used Python before, so the solutions here are probably not the most efficient ones.
+
+The project is set up for IDE usage (PyCharm). If you want to run directly from terminal, you possibly have to handle the module files.
