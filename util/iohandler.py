@@ -11,7 +11,7 @@ def begin(script_path):
     global inputFile, outputFile, startTime
 
     puzzle = os.path.basename(os.path.normpath(script_path)[:-3])
-    inputFile = open_local('input', puzzle, 'r')
+    inputFile = open_local('input', puzzle[:-2], 'r')
     outputFile = open_local('solution', puzzle, 'w')
 
     startTime = dateutil.current_timestamp()
