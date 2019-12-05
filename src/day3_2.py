@@ -13,7 +13,7 @@ blueWireCoords = []
 blueWireSteps = []
 
 
-def calculate_path(input, output, steps_array):
+def calculate_steps(input, output, steps_array):
     global redWireCoords, blueWireCoords, redWireSteps, blueWireSteps
     current_position = [0, 0]
     step_counter = 0
@@ -36,8 +36,8 @@ def calculate_path(input, output, steps_array):
             current_position = coord
 
 
-calculate_path(redWire, redWireCoords, redWireSteps)
-calculate_path(blueWire, blueWireCoords, blueWireSteps)
+calculate_steps(redWire, redWireCoords, redWireSteps)
+calculate_steps(blueWire, blueWireCoords, blueWireSteps)
 
 intersections = list(set(redWireCoords).intersection(blueWireCoords))
 intersectionSteps = []
