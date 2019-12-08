@@ -34,4 +34,4 @@ def end(solution: str):
 
 def open_local(folder: str, file: str, mode: str):
     separator = os.path.sep
-    return open(os.getcwd() + separator + folder + separator + file, mode)
+    return open(os.getcwd() + separator + folder + separator + file, mode, encoding='utf-8')
