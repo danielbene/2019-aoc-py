@@ -5,13 +5,12 @@ inputFile = iohandler.begin(__file__)
 
 # --- solution ---
 
-# https://stackoverflow.com/questions/2358045/how-can-i-implement-a-tree-in-python-are-there-any-built-in-data-structures-in
-
 planetTree = []
 orbitPairs = dict()
 directOrbitNum = 0
 indirectOrbitNum = 0
 
+# building the base dictionary
 for orbit in inputFile:
     orbit_pair = orbit.split(')')
     if orbitPairs.get(orbit_pair[0]) is None:
@@ -38,10 +37,10 @@ def build_tree(parent, childs):
 
 
 build_tree(com, orbitPairs.pop(currentParent))
-print(orbitPairs)
-print(directOrbitNum, indirectOrbitNum)
+
+# for visual representation (file output)
 # treeutil.save_tree_layout(com, 'day6_1_treemap')
 
 # --- solution ---
 
-iohandler.end(str(''))
+iohandler.end(str(directOrbitNum + indirectOrbitNum))
