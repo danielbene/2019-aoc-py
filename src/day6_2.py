@@ -48,9 +48,9 @@ build_tree(com, orbitPairs.pop(currentParent))
 
 w = Walker()
 
-# walk output for some examples incorrect (eg leaves empty blocks inside)
-# if output is incorrect than try to sanitize the steps string
-steps = len(str(w.walk(you_parent, san_parent)).split(',')[1:])
+# first node is not a step -> remove
+# if it's stupid, but it works...
+steps = ''.join(list(str(w.walk(you_parent, san_parent)).split(',')[1:])).count('Node')
 
 # --- solution ---
 
