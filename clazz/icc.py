@@ -80,3 +80,6 @@ class IcComputer:
                 self.position += 4
 
         return self.zero_mode(self.diagCode)
+
+    def calc_feedback_loop(self):
+        return [self.calculate(), self.intcodeArray]
