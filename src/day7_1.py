@@ -1,7 +1,6 @@
+from itertools import permutations
 from util import iohandler, stringutil
 from clazz import icc
-
-import itertools
 
 inputFile = iohandler.begin(__file__)
 
@@ -19,7 +18,7 @@ def calculate_signal(params):
     return amp_value
 
 
-permutations = list(itertools.permutations([0, 1, 2, 3, 4]))
+permutations = list(permutations([0, 1, 2, 3, 4]))
 for perm in permutations:
     combinationDict.update({calculate_signal(perm): perm})
 
