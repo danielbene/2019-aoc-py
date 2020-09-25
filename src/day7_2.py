@@ -16,12 +16,11 @@ def calculate_signal(params):
     amps = [icc.IcComputer(intcodeArray, [par, amp_value]) for par in params]
     while True:
         for amp in amps:
-            if amp_value != -9876543210:
+            if amp_value != icc.IcComputer.exit_value:
                 amp_value = amp.feedback(amp_value, first)
             elif len(amps)-1 != 0 and amp != amps[len(amps)-1]:
-                amps.remove(amp)
+                amps.remove(amp)  # removing exited amplifiers
             else:
-                print('FINISHED ROUND WITH: ' + str(amp.zero_mode(amp.diagCode)))
                 return amp.zero_mode(amp.diagCode)
 
         first = False
@@ -36,9 +35,6 @@ for key in combinationDict.keys():
     if key > maxKey:
         maxKey = key
 
-print(combinationDict)
-print(maxKey)
-
 # --- solution ---
 
-iohandler.end(str("solution"))
+iohandler.end(str(maxKey))

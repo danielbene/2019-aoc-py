@@ -9,6 +9,8 @@ def get_int_pos(int_value, pos):
 
 class IcComputer:
     # NOTE: variables defined outside constructor are considered static - value shared between object instances
+    exit_value = -9876543210  # dirty solution
+
     def __init__(self, ic_array, usr_input):
         # input list has to be copied or it will be a reference (instances would modify the original)
         self.intcodeArray = list(ic_array).copy()
@@ -85,12 +87,11 @@ class IcComputer:
             self.usrInput.insert(0, prev_amp_out_value)
         else:
             self.usrInput[0] = prev_amp_out_value
-        print(self.usrInput)
 
         while self.position <= len(self.intcodeArray):
             opcode_value = self.intcodeArray[self.position]
             if opcode_value == 99:
-                return -9876543210
+                return self.exit_value
 
             opcode = get_int_pos(opcode_value, -1)
 
