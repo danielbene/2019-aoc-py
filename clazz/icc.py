@@ -8,15 +8,14 @@ def get_int_pos(int_value, pos):
 
 
 class IcComputer:
-    intcodeArray = []
-    usrInput = list()
-    position = 0
-    diagCode = 0
-
+    # NOTE: variables defined outside constructor are considered static - value shared between object instances
     def __init__(self, ic_array, usr_input):
-        self.intcodeArray = ic_array
+        # input list has to be copied or it will be a reference (instances would modify the original)
+        self.intcodeArray = list(ic_array).copy()
         self.position = 0
         self.diagCode = 0
+
+        self.usrInput = []
         self.usrInput.append(usr_input[1])
         self.usrInput.append(usr_input[0])
 
@@ -67,7 +66,7 @@ class IcComputer:
                 self.calculate_values(opcode_value, opcode)
                 self.position += 4
             elif opcode == 3:
-                self.intcodeArray[self.first_mode(self.position + 1)] =\
+                self.intcodeArray[self.first_mode(self.position + 1)] = \
                     self.usrInput.pop(len(self.usrInput) - 1)
                 self.position += 2
             elif opcode == 4:
@@ -80,3 +79,37 @@ class IcComputer:
                 self.position += 4
 
         return self.zero_mode(self.diagCode)
+
+    def feedback(self, prev_amp_out_value, first):
+        if not first:
+            self.usrInput.insert(0, prev_amp_out_value)
+        else:
+            self.usrInput[0] = prev_amp_out_value
+        print(self.usrInput)
+
+        while self.position <= len(self.intcodeArray):
+            opcode_value = self.intcodeArray[self.position]
+            if opcode_value == 99:
+                return -9876543210
+
+            opcode = get_int_pos(opcode_value, -1)
+
+            if opcode == 1 or opcode == 2:
+                self.calculate_values(opcode_value, opcode)
+                self.position += 4
+            elif opcode == 3:
+                self.intcodeArray[self.first_mode(self.position + 1)] = \
+                    self.usrInput.pop(len(self.usrInput) - 1)
+                self.position += 2
+            elif opcode == 4:
+                self.diagCode = self.position + 1
+                self.position += 2
+                return self.zero_mode(self.diagCode)
+            elif opcode == 5 or opcode == 6:
+                self.calculate_jumps(opcode_value, opcode)
+            elif opcode == 7 or opcode == 8:
+                self.calculate_equality(opcode_value, opcode)
+                self.position += 4
+            else:
+                print('ERROR - INVALID OPCODE')
+                return
