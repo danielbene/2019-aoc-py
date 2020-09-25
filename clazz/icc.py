@@ -12,14 +12,13 @@ class IcComputer:
     usrInput = list()
     position = 0
     diagCode = 0
-    exitCode = 0
 
-    def __init__(self, ic_array, usr_input):
+    def __init__(self, ic_array, usrInput):
         self.intcodeArray = ic_array
         self.position = 0
         self.diagCode = 0
-        self.usrInput.append(usr_input[1])
-        self.usrInput.append(usr_input[0])
+        self.usrInput.append(usrInput[1])
+        self.usrInput.append(usrInput[0])
 
     def zero_mode(self, position_num) -> int:
         return int(self.intcodeArray[self.intcodeArray[position_num]])
@@ -60,8 +59,7 @@ class IcComputer:
         while self.position <= len(self.intcodeArray):
             opcode_value = self.intcodeArray[self.position]
             if opcode_value == 99:
-                self.exitCode = 1
-                return self.zero_mode(self.diagCode)
+                break
 
             opcode = get_int_pos(opcode_value, -1)
 
@@ -75,15 +73,10 @@ class IcComputer:
             elif opcode == 4:
                 self.diagCode = self.position + 1
                 self.position += 2
-                return self.zero_mode(self.diagCode)
             elif opcode == 5 or opcode == 6:
                 self.calculate_jumps(opcode_value, opcode)
             elif opcode == 7 or opcode == 8:
                 self.calculate_equality(opcode_value, opcode)
                 self.position += 4
 
-        # return self.zero_mode(self.diagCode)
-
-    def calc_feedback_loop(self, pos):
-        self.position = pos
-        return [self.calculate(), self.intcodeArray, self.position, self.exitCode]
+        return self.zero_mode(self.diagCode)
