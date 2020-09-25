@@ -13,12 +13,12 @@ class IcComputer:
     position = 0
     diagCode = 0
 
-    def __init__(self, ic_array, usrInput):
+    def __init__(self, ic_array, usr_input):
         self.intcodeArray = ic_array
         self.position = 0
         self.diagCode = 0
-        self.usrInput.append(usrInput[1])
-        self.usrInput.append(usrInput[0])
+        self.usrInput.append(usr_input[1])
+        self.usrInput.append(usr_input[0])
 
     def zero_mode(self, position_num) -> int:
         return int(self.intcodeArray[self.intcodeArray[position_num]])
