@@ -1,0 +1,41 @@
+- 1: Opcode 1 adds together numbers read from two positions and stores the result in a third position
+- 2: Opcode 2 works exactly like opcode 1, except it multiplies the two inputs instead of adding them
+- 3: Opcode 3 takes a single integer as input and saves it to the position given by its only parameter.
+    For example, the instruction 3,50 would take an input value and store it at address 50
+- 4: Opcode 4 outputs the value of its only parameter.
+    For example, the instruction 4,50 would output the value at address 50
+- 5: Opcode 5 is jump-if-true: if the first parameter is non-zero,
+    it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing
+- 6: Opcode 6 is jump-if-false: if the first parameter is zero,
+    it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing
+- 7: Opcode 7 is less than: if the first parameter is less than the second parameter,
+    it stores 1 in the position given by the third parameter. Otherwise, it stores 0
+- 8: Opcode 8 is equals: if the first parameter is equal to the second parameter,
+    it stores 1 in the position given by the third parameter. Otherwise, it stores 0
+
+- 99: Opcode 99 means that the program is finished and should immediately halt.
+    Encountering an unknown opcode means something went wrong.
+
+Parameter modes:
+The opcode is a two-digit number based only on the ones and tens digit of the value,
+that is, the opcode is the rightmost two digits of the first value in an instruction.
+- 0: parameter mode 0, position mode, which causes the parameter to be interpreted as a position
+    if the parameter is 50, its value is the value stored at address 50 in memory
+- 1: parameters in mode 1, immediate mode. In immediate mode, a parameter is interpreted as a value
+    if the parameter is 50, its value is simply 50
+---
+ABCDE
+ 1002
+
+DE - two-digit opcode,      02 == opcode 2
+ C - mode of 1st parameter,  0 == position mode
+ B - mode of 2nd parameter,  1 == immediate mode
+ A - mode of 3rd parameter,  0 == position mode,
+                                  omitted due to being a leading zero
+---
+
+-------
+
+- Once you're done processing an opcode, move to the next one by stepping forward 4 positions
+- The first four integers, 1,9,10,3, are at positions 0, 1, 2, and 3. Together, they represent the
+    first opcode (1, addition), the positions of the two inputs (9 and 10), and the position of the output (3)
