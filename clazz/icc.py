@@ -14,12 +14,18 @@ class IcComputer:
     def __init__(self, ic_array, usr_input):
         # input list has to be copied or it will be a reference (instances would modify the original)
         self.intcodeArray = list(ic_array).copy()
+        for i in range(100):
+            self.intcodeArray.append(0)
+
         self.position = 0
         self.diagCode = 0
+        self.relativeBase = 0
 
         self.usrInput = []
-        self.usrInput.append(usr_input[1])
-        self.usrInput.append(usr_input[0])
+        if len(usr_input) > 1:
+            self.usrInput.append(usr_input[1])
+        if len(usr_input) > 0:
+            self.usrInput.append(usr_input[0])
 
     def zero_mode(self, position_num) -> int:
         return int(self.intcodeArray[self.intcodeArray[position_num]])
@@ -28,17 +34,37 @@ class IcComputer:
         return int(self.intcodeArray[position_num])
 
     def get_param_value_by_mode(self, param_mode_array):
-        first = self.zero_mode(self.position + 1) if param_mode_array[2] == 0 else self.first_mode(self.position + 1)
-        second = self.zero_mode(self.position + 2) if param_mode_array[1] == 0 else self.first_mode(self.position + 2)
+        #first = self.zero_mode(self.position + 1) if param_mode_array[2] == 0 else self.first_mode(self.position + 1)
+        #second = self.zero_mode(self.position + 2) if param_mode_array[1] == 0 else self.first_mode(self.position + 2)
+
+        first = self.param_mode_functions(param_mode_array[2], 1)
+        second = self.param_mode_functions(param_mode_array[1], 2)
+
         # this is different, because we need only the position num to the array element assignment
         third = self.first_mode(self.position + 3) if param_mode_array[0] == 0 else self.position + 3
 
         return [first, second, third]
 
+    def param_mode_functions(self, mode, increment):
+        if mode == 0:
+            param = self.zero_mode(self.position + increment)
+        elif mode == 1:
+            param = self.first_mode(self.position + increment)
+        else:
+            value = self.first_mode(self.position + increment)
+            value += self.relativeBase
+            param = self.first_mode(value)
+
+        return param
+
     # handles opcode 1 and 2
     def calculate_values(self, opcode_value, opcode):
         params = self.get_param_value_by_mode(get_param_modes(opcode_value))
         self.intcodeArray[params[2]] = params[0] + params[1] if opcode == 1 else params[0] * params[1]
+
+    # handles opcode 4
+    def calculate_output(self, opcode_value, param):
+        return self.intcodeArray[param] if get_param_modes(opcode_value)[2] == 0 else param
 
     # handles opcode 5 and 6
     def calculate_jumps(self, opcode_value, opcode):
@@ -72,15 +98,19 @@ class IcComputer:
                     self.usrInput.pop(len(self.usrInput) - 1)
                 self.position += 2
             elif opcode == 4:
-                self.diagCode = self.position + 1
+                self.diagCode = self.calculate_output(opcode_value, self.position + 1)
                 self.position += 2
+                return self.first_mode(self.diagCode)
             elif opcode == 5 or opcode == 6:
                 self.calculate_jumps(opcode_value, opcode)
             elif opcode == 7 or opcode == 8:
                 self.calculate_equality(opcode_value, opcode)
                 self.position += 4
+            elif opcode == 9:
+                self.relativeBase += self.first_mode(self.position + 1)
+                self.position += 2
 
-        return self.zero_mode(self.diagCode)
+        # return self.zero_mode(self.diagCode)
 
     def feedback(self, prev_amp_out_value, first):
         if not first:
@@ -103,7 +133,7 @@ class IcComputer:
                     self.usrInput.pop(len(self.usrInput) - 1)
                 self.position += 2
             elif opcode == 4:
-                self.diagCode = self.position + 1
+                self.diagCode = self.calculate_output(opcode_value, self.position + 1)
                 self.position += 2
                 return self.zero_mode(self.diagCode)
             elif opcode == 5 or opcode == 6:
@@ -111,6 +141,9 @@ class IcComputer:
             elif opcode == 7 or opcode == 8:
                 self.calculate_equality(opcode_value, opcode)
                 self.position += 4
+            elif opcode == 9:
+                self.relativeBase += self.first_mode(self.position + 1)
+                self.position += 2
             else:
                 print('ERROR - INVALID OPCODE')
                 return
